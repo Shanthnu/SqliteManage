@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         }
         
          //use this for Select data
-        MySQL.SelectData(Tblname: TBL_USER, ColumnNames: [], SelectALL: true, AscendORDescendOrder: .DESC, AscendorDescendColunmName: USER_COLUMNS.user_id.rawValue) { (status, MSG,  dic_result) in
+        MySQL.SelectData(Tblname: TBL_USER, ColumnNames: [], SelectALL: true, AscendORDescendOrder: ASEND_DESEND_TYPE.DESC.rawValue, AscendorDescendColunmName: USER_COLUMNS.user_id.rawValue) { (status, MSG,  dic_result) in
                         print(MSG)
                         print(dic_result)
         }
@@ -42,7 +42,7 @@ class ViewController: UIViewController {
         }
 
         //use this for Select data
-        MySQL.SelectData(Tblname: TBL_USER, ColumnNames: [], SelectALL: true, AscendORDescendOrder: .DESC, AscendorDescendColunmName: USER_COLUMNS.user_id.rawValue) { (status, MSG,  dic_result) in
+        MySQL.SelectData(Tblname: TBL_USER, ColumnNames: [], SelectALL: true, AscendORDescendOrder: ASEND_DESEND_TYPE.DESC.rawValue, AscendorDescendColunmName: USER_COLUMNS.user_id.rawValue) { (status, MSG,  dic_result) in
             print(MSG)
             print(dic_result)
         }
