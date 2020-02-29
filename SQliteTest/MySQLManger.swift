@@ -43,6 +43,8 @@ open class MySQLManger: NSObject {
     func DBConnect() -> OpaquePointer {
         let fileURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             .appendingPathComponent("\(DB_NAME).sqlite")
+        print("DB connected fileURL --- \(fileURL)")
+
         // open database
         var db: OpaquePointer?
         if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
@@ -101,8 +103,8 @@ open class MySQLManger: NSObject {
             print("failure inserting foo: \(errmsg)")
             CompletionHandler(false,"failure inserting foo: \(errmsg)")
         }else{
-            print("inserted sucesfully")
-            CompletionHandler(true,"inserted sucesfully")
+            print("inserted successfully")
+            CompletionHandler(true,"inserted successfully")
         }
         
     }
@@ -137,15 +139,15 @@ open class MySQLManger: NSObject {
             print("failure update foo: \(errmsg)")
             CompletionHandler(false,"failure update foo: \(errmsg)")
         }else{
-            print("updated sucesfully")
-            CompletionHandler(true,"updated sucesfully")
+            print("updated successfully")
+            CompletionHandler(true,"updated successfully")
         }
         
     }
     
     // MARK:  - Select a data on table
     // MARK:  :- AscendORDescendOrder - 1 = ascending , 2 = descending , 3 = none
-    func SelectData(Tblname: String, ColumnNames : NSArray, SelectALL : Bool, AscendORDescendOrder: ASEND_DESEND_TYPE , AscendorDescendColunmName: String ,  CompletionHandler: (_ Status: Bool ,_ MSG : String , _ Result : NSMutableArray) -> ()) -> Void {
+    func SelectData(Tblname: String, ColumnNames : NSArray, SelectALL : Bool, AscendORDescendOrder: String , AscendorDescendColunmName: String ,  CompletionHandler: (_ Status: Bool ,_ MSG : String , _ Result : NSMutableArray) -> ()) -> Void {
         var statement: OpaquePointer?
         let selectcolumn = SelectALL ? "*" : ColumnNames.componentsJoined(by: ",")
         let selectQry = "select \(selectcolumn) from \(Tblname) \(AscendorDescendColunmName == "" ? "" : "order by \(AscendorDescendColunmName) \(AscendORDescendOrder)") "
@@ -153,6 +155,7 @@ open class MySQLManger: NSObject {
         if sqlite3_prepare_v2(DBConnect(), selectQry, -1, &statement, nil) != SQLITE_OK {
             let errmsg = String(cString: sqlite3_errmsg(DBConnect())!)
             print("error preparing select: \(errmsg)")
+            CompletionHandler(false, errmsg, [])
         }
         
         let arrResult = NSMutableArray()
@@ -183,6 +186,9 @@ open class MySQLManger: NSObject {
         if sqlite3_finalize(statement) != SQLITE_OK {
             let errmsg = String(cString: sqlite3_errmsg(DBConnect())!)
             print("error finalizing prepared statement: \(errmsg)")
+            CompletionHandler(false, errmsg, arrResult)
+        } else {
+            CompletionHandler(true, "Select query run successfully", arrResult)
         }
         statement = nil
     }
@@ -203,7 +209,7 @@ open class MySQLManger: NSObject {
             print(errorMSg)
             CompletionHandler(false,errorMSg)
         }else{
-            CompletionHandler(true,"Delted row sucessfully")
+            CompletionHandler(true,"Delted row successfully")
         }
     }
     
