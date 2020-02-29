@@ -187,11 +187,6 @@ open class MySQLManger: NSObject {
             let errmsg = String(cString: sqlite3_errmsg(DBConnect())!)
             print("error finalizing prepared statement: \(errmsg)")
             CompletionHandler(false, errmsg, arrResult)
-        }
-        if sqlite3_step(statement) != SQLITE_OK {
-            let errorMSg = "Delete Query Error \(String(cString: sqlite3_errmsg(DBConnect())))"
-            print(errorMSg)
-            CompletionHandler(false, errorMSg, arrResult)
         } else {
             CompletionHandler(true, "Select query run successfully", arrResult)
         }
